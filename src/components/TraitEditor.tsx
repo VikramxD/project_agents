@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Trait } from '@/types';
-import { PlusCircle, X, Save, Trash2 } from 'lucide-react';
+import { PlusCircle, Save, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';

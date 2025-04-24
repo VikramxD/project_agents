@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAppStore } from '@/store/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AgentCard from '@/components/AgentCard';
 import TraitEditor from '@/components/TraitEditor';
 import ImageDropzone from '@/components/ImageDropzone';
@@ -14,7 +12,6 @@ import { Character, Trait } from '@/types';
 import { Plus, RefreshCcw, UserCircle, X } from 'lucide-react';
 
 export default function CharactersPage() {
-  const { id } = useParams<{ id: string }>();
   const currentProject = useAppStore((state) => state.currentProject);
   const agents = useAppStore((state) => state.agents);
   const updateAgent = useAppStore((state) => state.updateAgent);
@@ -248,7 +245,7 @@ export default function CharactersPage() {
   };
   
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#e0e7ef] to-[#f1f5f9] dark:from-[#181c24] dark:via-[#232a36] dark:to-[#181c24] font-sans">
       {showProgress && (
         <ProgressBanner
           percent={progress}
@@ -258,44 +255,33 @@ export default function CharactersPage() {
           onClose={() => setShowProgress(false)}
         />
       )}
-      
-      <div className="container max-w-6xl py-8">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex min-h-screen">
+        {/* Glassy Sidebar */}
+        <aside className="w-full max-w-xs bg-white/60 dark:bg-[#232a36]/70 backdrop-blur-lg border-r border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-6 shadow-xl rounded-r-3xl">
           <div>
-            <h1 className="text-3xl font-bold">Characters</h1>
-            <p className="text-muted-foreground">
-              Create and manage characters for your film
-            </p>
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2 tracking-tight">Characters</h1>
+            <p className="text-muted-foreground text-sm mb-4">Create and manage characters for your film</p>
+            <Button onClick={() => setIsCreatingCharacter(true)} className="w-full rounded-full py-2 text-base font-semibold bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:scale-105 transition-transform">
+              <Plus className="mr-1 h-5 w-5" /> New Character
+            </Button>
           </div>
-          
-          <Button onClick={() => setIsCreatingCharacter(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            New Character
-          </Button>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-6">
-            <Card>
+          <div className="flex-1 overflow-y-auto">
+            <Card className="bg-white/80 dark:bg-[#232a36]/80 rounded-2xl shadow-lg border-0">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Character List</CardTitle>
-                <CardDescription>
-                  Select a character to edit their details
-                </CardDescription>
+                <CardTitle className="text-lg font-semibold">Character List</CardTitle>
+                <CardDescription>Select a character to edit</CardDescription>
               </CardHeader>
               <CardContent>
                 {currentProject.characters.length === 0 ? (
                   <div className="py-8 text-center">
                     <UserCircle className="mx-auto mb-2 h-10 w-10 text-muted-foreground" />
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      No characters created yet
-                    </p>
+                    <p className="mb-4 text-sm text-muted-foreground">No characters created yet</p>
                     <Button 
                       variant="outline" 
                       onClick={() => setIsCreatingCharacter(true)}
+                      className="rounded-full"
                     >
-                      <Plus className="mr-1 h-4 w-4" />
-                      Create Character
+                      <Plus className="mr-1 h-4 w-4" /> Create Character
                     </Button>
                   </div>
                 ) : (
@@ -303,10 +289,10 @@ export default function CharactersPage() {
                     {currentProject.characters.map((character) => (
                       <div 
                         key={character.id} 
-                        className={`flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors ${
+                        className={`flex cursor-pointer items-center justify-between rounded-xl p-2 transition-all ${
                           selectedCharacter?.id === character.id
-                            ? 'bg-secondary'
-                            : 'hover:bg-muted'
+                            ? 'bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 shadow-lg'
+                            : 'hover:bg-slate-100 dark:hover:bg-slate-800/60'
                         }`}
                         onClick={() => setSelectedCharacter(character)}
                       >
@@ -315,18 +301,17 @@ export default function CharactersPage() {
                             <img 
                               src={character.imageUrl} 
                               alt={character.name} 
-                              className="h-10 w-10 rounded-full object-cover"
+                              className="h-10 w-10 rounded-full object-cover border-2 border-blue-400 shadow"
                             />
                           ) : (
                             <UserCircle className="h-10 w-10 text-muted-foreground" />
                           )}
-                          <span className="font-medium">{character.name}</span>
+                          <span className="font-medium text-base">{character.name}</span>
                         </div>
-                        
                         <Button
                           variant="ghost" 
                           size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          className="h-8 w-8 text-destructive hover:text-destructive rounded-full hover:bg-red-100 dark:hover:bg-red-900/30"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCharacter(character.id);
@@ -340,35 +325,33 @@ export default function CharactersPage() {
                 )}
               </CardContent>
             </Card>
-            
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Character Agents</h2>
-              
-              {characterAgents.map((agent) => (
-                <AgentCard
-                  key={agent.id}
-                  name={agent.name}
-                  status={agent.status}
-                  lastRunAt={agent.lastRunAt}
-                  onRun={() => handleRunAgent(agent.id)}
-                />
-              ))}
-            </div>
           </div>
-          
-          <div className="lg:col-span-2">
+          <div className="space-y-4">
+            <h2 className="text-base font-semibold text-slate-700 dark:text-slate-200">Character Agents</h2>
+            {characterAgents.map((agent) => (
+              <AgentCard
+                key={agent.id}
+                name={agent.name}
+                status={agent.status}
+                lastRunAt={agent.lastRunAt}
+                onRun={() => handleRunAgent(agent.id)}
+              />
+            ))}
+          </div>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col items-center justify-center p-12">
+          <div className="w-full max-w-3xl">
             {selectedCharacter ? (
-              <div className="space-y-6">
-                <Card>
+              <div className="space-y-8">
+                <Card className="rounded-3xl shadow-2xl border-0 bg-white/90 dark:bg-[#232a36]/90">
                   <CardHeader>
-                    <CardTitle>{selectedCharacter.name}</CardTitle>
-                    <CardDescription>
-                      Edit character details and appearance
-                    </CardDescription>
+                    <CardTitle className="text-2xl font-bold tracking-tight">{selectedCharacter.name}</CardTitle>
+                    <CardDescription>Edit character details and appearance</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <div className="space-y-4">
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <div className="space-y-6">
                         <div className="grid gap-2">
                           <Label htmlFor="char-name">Name</Label>
                           <Input
@@ -380,7 +363,6 @@ export default function CharactersPage() {
                                 name: e.target.value,
                               };
                               setSelectedCharacter(updatedCharacter);
-                              
                               // Update in the store
                               const updatedCharacters = currentProject.characters.map(
                                 (char) => (char.id === selectedCharacter.id ? updatedCharacter : char)
@@ -390,12 +372,12 @@ export default function CharactersPage() {
                                 characters: updatedCharacters,
                               });
                             }}
+                            className="rounded-xl"
                           />
                         </div>
-                        
                         <div className="grid gap-2">
                           <Label>Character Summary</Label>
-                          <div className="rounded-md bg-muted p-3 text-sm">
+                          <div className="rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 p-4 text-sm shadow-inner">
                             <p>
                               {selectedCharacter.traits.length > 0
                                 ? `${selectedCharacter.name} is a ${
@@ -410,8 +392,7 @@ export default function CharactersPage() {
                           </div>
                         </div>
                       </div>
-                      
-                      <div className="space-y-2">
+                      <div className="space-y-2 flex flex-col items-center">
                         <Label>Character Image</Label>
                         <ImageDropzone
                           onUpload={handleImageUpload}
@@ -422,7 +403,6 @@ export default function CharactersPage() {
                               imageUrl: '',
                             };
                             setSelectedCharacter(updatedCharacter);
-                            
                             // Update in the store
                             const updatedCharacters = currentProject.characters.map(
                               (char) => (char.id === selectedCharacter.id ? updatedCharacter : char)
@@ -432,19 +412,18 @@ export default function CharactersPage() {
                               characters: updatedCharacters,
                             });
                           }}
-                          className="aspect-square h-full max-h-[250px]"
+                          className="aspect-square h-40 w-40 rounded-2xl border-2 border-blue-300 shadow-lg"
                         />
                       </div>
                     </div>
                   </CardContent>
                   <CardFooter className="justify-end border-t pt-4">
-                    <Button variant="outline" onClick={() => handleRunAgent(characterAgents[0].id)}>
+                    <Button variant="outline" onClick={() => handleRunAgent(characterAgents[0].id)} className="rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:scale-105 transition-transform">
                       <RefreshCcw className="mr-1 h-4 w-4" />
                       Generate Traits
                     </Button>
                   </CardFooter>
                 </Card>
-                
                 <TraitEditor
                   traits={selectedCharacter.traits}
                   characterId={selectedCharacter.id}
@@ -454,15 +433,13 @@ export default function CharactersPage() {
                 />
               </div>
             ) : isCreatingCharacter ? (
-              <Card>
+              <Card className="rounded-3xl shadow-2xl border-0 bg-white/90 dark:bg-[#232a36]/90">
                 <CardHeader>
-                  <CardTitle>Create New Character</CardTitle>
-                  <CardDescription>
-                    Add a new character to your project
-                  </CardDescription>
+                  <CardTitle className="text-2xl font-bold">Create New Character</CardTitle>
+                  <CardDescription>Add a new character to your project</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-8 md:grid-cols-2">
                     <div className="space-y-4">
                       <div className="grid gap-2">
                         <Label htmlFor="new-char-name">Character Name</Label>
@@ -471,49 +448,48 @@ export default function CharactersPage() {
                           value={newCharacter.name}
                           onChange={(e) => setNewCharacter({ ...newCharacter, name: e.target.value })}
                           placeholder="e.g., Alex Mercer"
+                          className="rounded-xl"
                         />
                       </div>
                     </div>
-                    
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex flex-col items-center">
                       <Label>Character Image</Label>
                       <ImageDropzone
                         onUpload={handleImageUpload}
                         image={newCharacter.imageUrl}
                         onRemove={() => setNewCharacter({ ...newCharacter, imageUrl: '' })}
-                        className="aspect-square h-full"
+                        className="aspect-square h-40 w-40 rounded-2xl border-2 border-blue-300 shadow-lg"
                       />
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="justify-between border-t pt-4">
-                  <Button variant="outline" onClick={() => setIsCreatingCharacter(false)}>
-                    Cancel
-                  </Button>
+                  <Button variant="outline" onClick={() => setIsCreatingCharacter(false)} className="rounded-full">Cancel</Button>
                   <Button
                     onClick={handleCreateCharacter}
                     disabled={!newCharacter.name.trim()}
+                    className="rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:scale-105 transition-transform"
                   >
                     Create Character
                   </Button>
                 </CardFooter>
               </Card>
             ) : (
-              <div className="flex h-full flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
+              <div className="flex h-full flex-col items-center justify-center rounded-3xl border border-dashed p-12 text-center bg-white/80 dark:bg-[#232a36]/80 shadow-xl">
                 <UserCircle className="mb-4 h-12 w-12 text-muted-foreground" />
                 <h2 className="mb-2 text-xl font-semibold">No Character Selected</h2>
                 <p className="mb-6 max-w-md text-muted-foreground">
                   Select a character from the list or create a new one to start editing
                 </p>
-                <Button onClick={() => setIsCreatingCharacter(true)}>
+                <Button onClick={() => setIsCreatingCharacter(true)} className="rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:scale-105 transition-transform">
                   <Plus className="mr-1 h-4 w-4" />
                   Create New Character
                 </Button>
               </div>
             )}
           </div>
-        </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 }

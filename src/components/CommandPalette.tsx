@@ -136,7 +136,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                         }`
                       }
                     >
-                      {({ active }) => (
+                      {() => (
                         <>
                           <div className="mr-3 flex h-6 w-6 flex-none items-center justify-center rounded-md border">
                             {item.icon}

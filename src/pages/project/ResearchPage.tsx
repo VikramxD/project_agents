@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAppStore } from '@/store/store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +12,6 @@ import { ClipboardList, Link2, Plus, Search } from 'lucide-react';
 import { Agent } from '@/types';
 
 export default function ResearchPage() {
-  const { id } = useParams<{ id: string }>();
   const currentProject = useAppStore((state) => state.currentProject);
   const agents = useAppStore((state) => state.agents);
   const updateAgent = useAppStore((state) => state.updateAgent);
@@ -91,7 +89,7 @@ export default function ResearchPage() {
     : searchResults;
   
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-[#181c24] via-[#232a36] to-[#181c24] font-sans">
       {showProgress && (
         <ProgressBanner
           percent={progress}
@@ -101,158 +99,15 @@ export default function ResearchPage() {
           onClose={() => setShowProgress(false)}
         />
       )}
-      
-      <div className="container max-w-6xl py-8">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex min-h-screen">
+        {/* Glassy Sidebar */}
+        <aside className="w-full max-w-xs bg-[#232a36]/80 backdrop-blur-lg border-r border-slate-800 p-6 flex flex-col gap-6 shadow-xl rounded-r-3xl">
           <div>
-            <h1 className="text-3xl font-bold">{currentProject.name} Research</h1>
-            <p className="text-muted-foreground">
-              Use AI agents to research topics for your film
-            </p>
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-2 tracking-tight">Research</h1>
+            <p className="text-muted-foreground text-sm mb-4">Use AI agents to research topics for your film</p>
           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-6 lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Research Brief</CardTitle>
-                <CardDescription>
-                  Define what you want to research for your film
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="topic">Research Topic</Label>
-                    <Input
-                      id="topic"
-                      value={researchTopic}
-                      onChange={(e) => setResearchTopic(e.target.value)}
-                      placeholder="e.g., Cyberpunk aesthetic in film"
-                    />
-                  </div>
-                  
-                  <div className="grid gap-2">
-                    <Label htmlFor="prompt">Research Prompt</Label>
-                    <Textarea
-                      id="prompt"
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      placeholder="Provide detailed instructions for the research agent..."
-                      rows={4}
-                    />
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter className="justify-between border-t pt-4">
-                <p className="text-xs text-muted-foreground">
-                  Research results will appear in the sidebar
-                </p>
-                <Button
-                  disabled={!researchTopic.trim()}
-                  onClick={() => {
-                    const agent = researchAgents.find(a => a.status !== 'working');
-                    if (agent) {
-                      handleRunAgent(agent);
-                    }
-                  }}
-                >
-                  <ClipboardList className="mr-1 h-4 w-4" />
-                  Start Research
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            <Tabs defaultValue="results">
-              <TabsList className="mb-4">
-                <TabsTrigger value="results">Search Results</TabsTrigger>
-                <TabsTrigger value="sources">Source Links</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="results" className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search in results..."
-                    className="pl-9"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {filteredResults.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-6 text-center">
-                      <Search className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-                      <h3 className="mb-1 text-lg font-medium">No results yet</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Run a research agent to get started, or search for different terms.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="space-y-3">
-                    {filteredResults.map((result, index) => (
-                      <Card key={index} className="overflow-hidden">
-                        <CardContent className="p-0">
-                          <button className="w-full text-left transition-colors hover:bg-muted/50">
-                            <div className="p-4">
-                              <h3 className="font-medium">{result}</h3>
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                Click to view detailed research about {result.toLowerCase()}
-                              </p>
-                            </div>
-                          </button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="sources">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Source Links</CardTitle>
-                    <CardDescription>
-                      External references and resources for your research
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between rounded-md border p-3">
-                        <div className="flex items-center gap-2">
-                          <Link2 className="h-4 w-4 text-muted-foreground" />
-                          <span>The Evolution of Cyberpunk in Cinema</span>
-                        </div>
-                        <Button variant="outline" size="sm">
-                          Visit
-                        </Button>
-                      </div>
-                      <div className="flex items-center justify-between rounded-md border p-3">
-                        <div className="flex items-center gap-2">
-                          <Link2 className="h-4 w-4 text-muted-foreground" />
-                          <span>Visual Techniques in Neo-Noir Filmmaking</span>
-                        </div>
-                        <Button variant="outline" size="sm">
-                          Visit
-                        </Button>
-                      </div>
-                      <Button className="w-full" variant="outline">
-                        <Plus className="mr-1 h-4 w-4" />
-                        Add Source Link
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-          
-          <div className="space-y-6">
-            <h2 className="text-xl font-semibold">Research Agents</h2>
-            
+          <div className="space-y-4">
+            <h2 className="text-base font-semibold text-slate-200">Research Agents</h2>
             <div className="grid gap-4">
               {researchAgents.map((agent) => (
                 <AgentCard
@@ -264,35 +119,161 @@ export default function ResearchPage() {
                 />
               ))}
             </div>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Research Stats</CardTitle>
+          </div>
+          <Card className="bg-[#232a36]/90 rounded-2xl shadow-lg border-0 mt-6">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold">Research Stats</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">Topics Researched</dt>
+                  <dd className="text-2xl font-bold">3</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Sources Gathered</dt>
+                  <dd className="text-2xl font-bold">12</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Research Sessions</dt>
+                  <dd className="text-2xl font-bold">5</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Last Updated</dt>
+                  <dd className="font-medium">Today</dd>
+                </div>
+              </dl>
+            </CardContent>
+          </Card>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col items-center justify-center p-12">
+          <div className="w-full max-w-4xl">
+            <Card className="rounded-3xl shadow-2xl border-0 bg-[#232a36]/90 mb-8">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold tracking-tight">Research Brief</CardTitle>
+                <CardDescription>Define what you want to research for your film</CardDescription>
               </CardHeader>
               <CardContent>
-                <dl className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <dt className="text-muted-foreground">Topics Researched</dt>
-                    <dd className="text-2xl font-bold">3</dd>
+                <form className="space-y-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="topic">Research Topic</Label>
+                    <Input
+                      id="topic"
+                      value={researchTopic}
+                      onChange={(e) => setResearchTopic(e.target.value)}
+                      placeholder="e.g., Cyberpunk aesthetic in film"
+                      className="rounded-xl bg-[#181c24] text-white border-slate-700"
+                    />
                   </div>
-                  <div>
-                    <dt className="text-muted-foreground">Sources Gathered</dt>
-                    <dd className="text-2xl font-bold">12</dd>
+                  <div className="grid gap-2">
+                    <Label htmlFor="prompt">Research Prompt</Label>
+                    <Textarea
+                      id="prompt"
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      placeholder="Provide detailed instructions for the research agent..."
+                      rows={4}
+                      className="rounded-xl bg-[#181c24] text-white border-slate-700"
+                    />
                   </div>
-                  <div>
-                    <dt className="text-muted-foreground">Research Sessions</dt>
-                    <dd className="text-2xl font-bold">5</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">Last Updated</dt>
-                    <dd className="font-medium">Today</dd>
-                  </div>
-                </dl>
+                </form>
               </CardContent>
+              <CardFooter className="justify-between border-t pt-4">
+                <p className="text-xs text-muted-foreground">Research results will appear below</p>
+                <Button
+                  disabled={!researchTopic.trim()}
+                  onClick={() => {
+                    const agent = researchAgents.find(a => a.status !== 'working');
+                    if (agent) {
+                      handleRunAgent(agent);
+                    }
+                  }}
+                  className="rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:scale-105 transition-transform px-6 py-2 text-base font-semibold"
+                >
+                  <ClipboardList className="mr-1 h-4 w-4" />
+                  Start Research
+                </Button>
+              </CardFooter>
             </Card>
+            <Tabs defaultValue="results">
+              <TabsList className="mb-4 rounded-full bg-[#232a36]/80 p-1 flex gap-2">
+                <TabsTrigger value="results" className="rounded-full px-6 py-2 text-base font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Search Results</TabsTrigger>
+                <TabsTrigger value="sources" className="rounded-full px-6 py-2 text-base font-semibold data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Source Links</TabsTrigger>
+              </TabsList>
+              <TabsContent value="results" className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search in results..."
+                    className="pl-9 rounded-xl bg-[#181c24] text-white border-slate-700"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                {filteredResults.length === 0 ? (
+                  <Card className="rounded-2xl bg-[#232a36]/80 border-0 shadow-md">
+                    <CardContent className="p-6 text-center">
+                      <Search className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+                      <h3 className="mb-1 text-lg font-medium">No results yet</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Run a research agent to get started, or search for different terms.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredResults.map((result, index) => (
+                      <Card key={index} className="overflow-hidden rounded-2xl bg-[#232a36]/80 border-0 shadow-md">
+                        <CardContent className="p-0">
+                          <button className="w-full text-left transition-colors hover:bg-blue-900/20 rounded-2xl">
+                            <div className="p-4">
+                              <h3 className="font-medium text-white">{result}</h3>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                Click to view detailed research about {result.toLowerCase()}
+                              </p>
+                            </div>
+                          </button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+              <TabsContent value="sources">
+                <Card className="rounded-2xl bg-[#232a36]/80 border-0 shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Source Links</CardTitle>
+                    <CardDescription>External references and resources for your research</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between rounded-md border border-slate-700 p-3">
+                        <div className="flex items-center gap-2">
+                          <Link2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-white">The Evolution of Cyberpunk in Cinema</span>
+                        </div>
+                        <Button variant="outline" size="sm" className="rounded-full">Visit</Button>
+                      </div>
+                      <div className="flex items-center justify-between rounded-md border border-slate-700 p-3">
+                        <div className="flex items-center gap-2">
+                          <Link2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-white">Visual Techniques in Neo-Noir Filmmaking</span>
+                        </div>
+                        <Button variant="outline" size="sm" className="rounded-full">Visit</Button>
+                      </div>
+                      <Button className="w-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md hover:scale-105 transition-transform">
+                        <Plus className="mr-1 h-4 w-4" />
+                        Add Source Link
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
-        </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 }

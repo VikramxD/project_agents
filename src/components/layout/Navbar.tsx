@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Film, Settings, Moon, Sun, Command } from 'lucide-react';
+import { Menu, X, Film, Moon, Sun, Command } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/store/store';
 import CommandPalette from '@/components/CommandPalette';

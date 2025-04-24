@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAppStore } from '@/store/store';
 import { Agent, Scene } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,10 +11,9 @@ import ProgressBanner from '@/components/ProgressBanner';
 import Timeline from '@/components/Timeline';
 import ImageDropzone from '@/components/ImageDropzone';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FilmIcon, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export default function StoryboardPage() {
-  const { id } = useParams<{ id: string }>();
   const currentProject = useAppStore((state) => state.currentProject);
   const agents = useAppStore((state) => state.agents);
   const updateAgent = useAppStore((state) => state.updateAgent);

@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAppStore } from '@/store/store';
-import { Agent, RenderJob, Scene } from '@/types';
+import { Agent, RenderJob } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,7 +14,6 @@ import RenderQueueTable from '@/components/RenderQueueTable';
 import { FilmIcon, Play, Settings } from 'lucide-react';
 
 export default function ShotsPage() {
-  const { id } = useParams<{ id: string }>();
   const currentProject = useAppStore((state) => state.currentProject);
   const agents = useAppStore((state) => state.agents);
   const updateAgent = useAppStore((state) => state.updateAgent);

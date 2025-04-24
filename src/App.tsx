@@ -48,9 +48,18 @@ function App() {
           path="/"
           element={
             <PrivateRoute>
-              <div className="min-h-screen bg-background text-foreground">
-                <Navbar />
-                <Outlet />
+              <div className="min-h-screen relative bg-background text-foreground overflow-x-hidden">
+                {/* Animated gradient background */}
+                <div className="pointer-events-none fixed inset-0 z-0 animate-in fade-in" aria-hidden="true"
+                  style={{
+                    background: 'radial-gradient(ellipse 80% 60% at 60% 20%, rgba(0,200,255,0.18) 0%, transparent 100%), radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255,0,200,0.12) 0%, transparent 100%)',
+                    filter: 'blur(32px)',
+                  }}
+                />
+                <div className="relative z-10 glass min-h-screen">
+                  <Navbar />
+                  <Outlet />
+                </div>
               </div>
             </PrivateRoute>
           }

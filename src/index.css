@@ -49,9 +49,9 @@
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
@@ -71,6 +71,10 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* Glassmorphism gradients */
+    --glass-gradient: linear-gradient(135deg, rgba(40,40,60,0.85) 60%, rgba(60,60,80,0.7) 100%);
+    --glass-border: rgba(255,255,255,0.08);
+    --glass-blur: 16px;
   }
 }
 
@@ -241,6 +245,18 @@
 /* Card Styles */
 .card {
   @apply rounded-lg border bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md;
+  background: var(--glass-gradient, rgba(40,40,60,0.85));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  border: 1.5px solid var(--glass-border, rgba(255,255,255,0.08));
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+}
+
+.glass {
+  background: var(--glass-gradient, rgba(40,40,60,0.85));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  border-radius: 1.2rem;
+  border: 1.5px solid var(--glass-border, rgba(255,255,255,0.08));
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
 }
 
 /* Button Styles */

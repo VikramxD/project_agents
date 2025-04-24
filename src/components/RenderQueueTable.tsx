@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { RenderJob } from '@/types';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { MoreVertical, PlayCircle, AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { MoreVertical, PlayCircle, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -38,7 +38,7 @@ export function RenderQueueTable({
   onDelete,
   className,
 }: RenderQueueTableProps) {
-  const [hoveredJob, setHoveredJob] = useState<string | null>(null);
+  const [/* hoveredJob */, setHoveredJob] = useState<string | null>(null);
   
   const getStatusIcon = (status: RenderJob['status']) => {
     switch (status) {
